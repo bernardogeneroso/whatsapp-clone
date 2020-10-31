@@ -1,13 +1,13 @@
 import React from "react";
 
+import Dashboard from "./pages/Dashboard";
+
 import GlobalStyle from "./styles/global";
 
 const App = () => {
   return (
     <>
-      <div>
-        <h1>Let's build a Whatsapp front-end</h1>
-      </div>
+      <Dashboard />
 
       <GlobalStyle />
     </>

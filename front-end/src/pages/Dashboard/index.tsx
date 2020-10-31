@@ -1,11 +1,15 @@
 import React from "react";
 
+import Sidebar from "../Sidebar";
+import Chat from "../Chat";
+
 import { Container } from "./styles";
 
 const Dashboard = () => {
   return (
     <Container>
-      <h1>Dashboard</h1>
+      <Sidebar />
+      <Chat />
     </Container>
   );
 };
