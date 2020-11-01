@@ -7,7 +7,9 @@ interface MessageProps {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 60%;
+  width: 70%;
+
+  z-index: 2;
 `
 
 export const Header = styled.div`
@@ -16,6 +18,8 @@ export const Header = styled.div`
   align-items: center;
   height: 62px;
   white-space: normal;
+
+  background-color: #EDEDED;
 
   padding: 7px 12px 6px 12px;
   border-bottom: 1px solid lightgray;
@@ -45,7 +49,6 @@ export const HeaderLeft = styled.div`
 export const HeaderRight = styled.div``
 
 export const ContainerMessages = styled.div`
-  flex: 1;
   display: flex;
   flex-direction: column;
 
@@ -53,8 +56,22 @@ export const ContainerMessages = styled.div`
   background-repeat: repeat;
   background-position: center;
 
-  padding: 30px;
+  height: calc(100% - 120px);
+  padding: 30px 30px 0px 30px;
   overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 6px!important;
+    height: 6px!important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,.2);
+  }
+
+  ::-webkit-scrollbar-track {
+      background: hsla(0,0%,100%,.1);
+  }
 `
 
 export const Message = styled.p<MessageProps>`
@@ -63,7 +80,7 @@ export const Message = styled.p<MessageProps>`
   padding: 10px;
   width: fit-content;
   border-radius: 10px;
-  background: #fff;
+  background: ${props => props.receiver ? "#DCF8C6" : "#fff"};
   margin-bottom: 30px;
 
   ${props => props.receiver && css`margin-left: auto;`}
@@ -73,10 +90,38 @@ export const Message = styled.p<MessageProps>`
     top: -15px;
     font-weight: 800;
     font-size: xx-small;
+    color: rgba(0,0,0,0.6);
   }
 
   span {
     margin-left: 10px;
     font-size: xx-small;
+  }
+`
+
+export const FooterWriteMessage = styled.div`
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  box-sizing: border-box;
+  max-width: 100%;
+  padding: 0px 8px 0px 8px;
+  align-items: center;
+  height: 64px;
+
+  input {
+    flex: 1;
+    margin: 10px;
+    font-size: 16px;
+    padding: 9px 12px 11px;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 21px;
+
+    &::placeholder {
+      color: rgba(0,0,0,0.6)
+    }
   }
 `

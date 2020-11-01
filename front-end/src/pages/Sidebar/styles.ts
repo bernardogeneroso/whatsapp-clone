@@ -12,7 +12,9 @@ interface SearchContainerProps {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 30%;
+
+  z-index: 2;
 
   .MuiIconButton-root, .MuiSvgIcon-root {
     color: #919191;
@@ -25,6 +27,8 @@ export const Header = styled.div`
   justify-content: space-between;
   padding: 7px 12px 6px 12px;
   border-right: 1px solid lightgray;
+
+  background-color: #EDEDED;
 
   > div {
     display: flex;
@@ -46,7 +50,7 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   background-color: ${props => props.searchFind ? '#fff' : '#F6F6F6'};
   padding: 8px 10px 8px 10px;
 
-  border-top-right-radius: 5px;
+
 
   > div {
     display: flex;
@@ -95,7 +99,7 @@ export const ListChatContainer = styled.div`
 
   ::-webkit-scrollbar-track {
       background: hsla(0,0%,100%,.1);
-}
+  }
 `
 
 
@@ -122,6 +126,7 @@ export const GroupChatContainer = styled.div<GroupChatContainerProps>`
 
   div {
     h3 {
+      font-weight: 450;
       font-size: 16px;
     }
 
@@ -132,6 +137,7 @@ export const GroupChatContainer = styled.div<GroupChatContainerProps>`
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: rgba(0,0,0, 0.65)
     }
   }
 `
