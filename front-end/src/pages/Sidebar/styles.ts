@@ -46,6 +46,8 @@ export const SearchContainer = styled.div<SearchContainerProps>`
   background-color: ${props => props.searchFind ? '#fff' : '#F6F6F6'};
   padding: 8px 10px 8px 10px;
 
+  border-top-right-radius: 5px;
+
   > div {
     display: flex;
     padding: 9px 10px 9px 10px;
