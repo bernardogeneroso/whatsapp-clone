@@ -8,8 +8,6 @@ export const Container = styled.div`
 
   background-color: #EDEDED;
 
-  box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.75);
-
   @media only screen and (max-width: 1440px) {
     padding: 0px;
   }
