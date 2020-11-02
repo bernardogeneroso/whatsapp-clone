@@ -62,72 +62,72 @@ const Chat = () => {
       <ContainerMessages>
         <Message receiver>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message receiver>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message receiver>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
         <Message receiver>
           <div>Camelo</div>
-          This is a message
+          That's a message
           <span>{formatMessageDate}</span>
         </Message>
       </ContainerMessages>
