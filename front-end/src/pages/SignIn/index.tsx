@@ -26,8 +26,6 @@ const SignIn = () => {
           <img src={logoSignIn} alt="Whatshapp-Clone" />
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Log In</h1>
-
             <Input name="email" icon={FiMail} type="text" placeholder="Email" />
             <Input
               name="password"
