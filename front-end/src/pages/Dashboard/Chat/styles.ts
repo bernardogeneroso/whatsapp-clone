@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 
+import backgroundUrl from '../../../assets/background-url.png'
+
 interface MessageProps {
   receiver?: boolean
 }
@@ -52,7 +54,7 @@ export const ContainerMessages = styled.div`
   display: flex;
   flex-direction: column;
 
-  background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+  background-image: url(${backgroundUrl});
   background-repeat: repeat;
   background-position: center;
 

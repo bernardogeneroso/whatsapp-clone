@@ -7,6 +7,9 @@ import { IconButton } from "@material-ui/core";
 import { Chat, DonutLarge, MoreVert } from "@material-ui/icons";
 
 import { useAuth } from "../../../hooks/Auth";
+import { useRooms } from "../../../hooks/Rooms";
+
+import api from "../../../services/api";
 
 import {
   Container,
@@ -15,7 +18,8 @@ import {
   ListChatContainer,
   GroupChatContainer,
 } from "./styles";
-import api from "../../../services/api";
+
+import userDefault from "../../../assets/userDefault.png";
 
 interface RoomsProps {
   id: number;
@@ -24,17 +28,10 @@ interface RoomsProps {
   image: string;
 }
 
-interface SideBarProps {
-  handleSelectedRoom: {
-    id: number;
-    name: string;
-    chat_description: string;
-    image: string;
-  };
-}
-
-const Sidebar = ({ handleSelectedRoom }: any) => {
+const Sidebar = () => {
   const { user } = useAuth();
+
+  const { setSelectedRoom } = useRooms();
 
   const [rooms, setRooms] = useState<RoomsProps[]>([]);
   const [searchFind, setSearchFind] = useState<boolean>(false);
@@ -99,11 +96,12 @@ const Sidebar = ({ handleSelectedRoom }: any) => {
 
       <ListChatContainer>
         {rooms.map((room) => (
-          <GroupChatContainer key={room.id} widthSidebar={widthSidebar}>
-            <img
-              src="https://material-ui.com//static/images/avatar/3.jpg"
-              alt="IMG"
-            />
+          <GroupChatContainer
+            key={room.id}
+            widthSidebar={widthSidebar}
+            onClick={() => setSelectedRoom(room)}
+          >
+            <img src={room.image ? room.image : userDefault} alt="IMG" />
 
             <div>
               <h3>{room.name}</h3>

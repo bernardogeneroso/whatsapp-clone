@@ -23,6 +23,7 @@ import {
   Message,
   FooterWriteMessage,
 } from "./styles";
+import { useRooms } from "../../../hooks/Rooms";
 
 interface MessageProps {
   name: string;
@@ -31,6 +32,8 @@ interface MessageProps {
 }
 
 const Chat = () => {
+  const { selectedRoom } = useRooms();
+
   const [userName] = useState("");
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -38,14 +41,14 @@ const Chat = () => {
   const containerMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    api.get("/messages/sync").then((response) => {
+    /*api.get("/messages/sync").then((response) => {
       setMessages(response.data);
     });
 
     const scrollValue = containerMessageRef.current?.scrollHeight;
     if (scrollValue) {
       containerMessageRef.current?.scrollTo(0, scrollValue);
-    }
+    }*/
   }, []);
 
   const handleChangeInputValue = useCallback((event) => {
@@ -53,14 +56,14 @@ const Chat = () => {
   }, []);
 
   const handleSendMessage = useCallback(async () => {
-    await api.post("/messages/new", {
+    /*await api.post("/messages/new", {
       message: inputValue,
       name: userName,
       timestamp: new Date(),
     });
 
-    setInputValue("");
-  }, [userName, inputValue]);
+    setInputValue("");*/
+  }, []);
 
   const handleKeyDown = useCallback(
     async (e) => {
@@ -77,14 +80,16 @@ const Chat = () => {
     <Container>
       <Header>
         <HeaderLeft>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
+          <img src={selectedRoom && selectedRoom.image} alt="Avatar" />
 
           <div>
-            <h3>Dance Room</h3>
-            <p>Last message: 04 Nov 2020 18:00</p>
+            <h3>{selectedRoom && selectedRoom.name}</h3>
+
+            {selectedRoom && selectedRoom.chat_description ? (
+              <p>Last message: {selectedRoom.chat_description}</p>
+            ) : (
+              ""
+            )}
           </div>
         </HeaderLeft>
         <HeaderRight>
@@ -101,8 +106,11 @@ const Chat = () => {
       </Header>
 
       <ContainerMessages ref={containerMessageRef}>
-        {messages.map((message, i) => (
-          <Message receiver={message.name === userName && true} key={i}>
+        {messages.map((message) => (
+          <Message
+            receiver={message.name === userName && true}
+            key={message.timestamp}
+          >
             <h3>{message.name}</h3>
             <p>{message.message}</p>
             <span>{format(new Date(message.timestamp), "H:mm")}</span>
