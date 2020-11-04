@@ -9,7 +9,6 @@ interface User {
 }
 
 interface AuthState {
-  token: string;
   user: User;
 }
 
@@ -29,52 +28,39 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>(() => {
-    const token = localStorage.getItem("Whatshapp-clone:token");
     const user = localStorage.getItem("Whatshapp-clone:user");
 
-    if (token && user) {
-      api.defaults.headers.authorization = `Bearer ${token}`;
-
-      return { token, user: JSON.parse(user) };
+    if (user) {
+      return { user: JSON.parse(user) };
     }
 
     return {} as AuthState;
   });
 
   const signIn = useCallback(async ({ email, password }) => {
-    const response = await api.post("sessions", {
+    const response = await api.post("/users/sessions", {
       email,
       password,
     });
 
-    const { user, token } = response.data;
+    const { user } = response.data;
 
-    localStorage.setItem("Whatshapp-clone:token", token);
     localStorage.setItem("Whatshapp-clone:user", JSON.stringify(user));
 
-    api.defaults.headers.authorization = `Bearer ${token}`;
-
-    setData({ token, user });
+    setData({ user });
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem("Whatshapp-clone:token");
     localStorage.removeItem("Whatshapp-clone:user");
 
     setData({} as AuthState);
   }, []);
 
-  const updateUser = useCallback(
-    (user: User) => {
-      setData({
-        token: data.token,
-        user,
-      });
+  const updateUser = useCallback((user: User) => {
+    setData({ user });
 
-      localStorage.setItem("Whatshapp-clone:user", JSON.stringify(user));
-    },
-    [setData, data.token]
-  );
+    localStorage.setItem("Whatshapp-clone:user", JSON.stringify(user));
+  }, []);
 
   return (
     <AuthContext.Provider

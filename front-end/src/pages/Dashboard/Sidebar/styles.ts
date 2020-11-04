@@ -34,7 +34,6 @@ export const Header = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 10vw;
 
     img {
       width: 40px;
@@ -42,6 +41,10 @@ export const Header = styled.div`
       border-radius: 40px;
 
       cursor: pointer;
+    }
+
+    span {
+      margin-left: 10px;
     }
   }
 `

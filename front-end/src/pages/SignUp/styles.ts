@@ -52,6 +52,13 @@ export const AnimationContainer = styled.div`
     width: 340px;
     text-align: center;
 
+    h1 {
+      margin-bottom: 24px;
+
+      color: ${shade(0.2, '#34B322')};
+      opacity: 0.8;
+    }
+
     a {
       color: #34B322;
       display: block;

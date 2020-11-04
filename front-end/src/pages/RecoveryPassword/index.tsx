@@ -1,13 +1,12 @@
 import React, { useCallback, useRef } from "react";
-import { FiLogIn, FiMail, FiLock } from "react-icons/fi";
+import { FiArrowLeft, FiLock } from "react-icons/fi";
 import { Form } from "@unform/web";
 import { FormHandles } from "@unform/core";
 import * as Yup from "yup";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import getValidationErrors from "../../utils/getValidationErrors";
 
-import { useAuth } from "../../hooks/Auth";
 import { useToast } from "../../hooks/Toast";
 
 import Input from "../../components/Input";
@@ -17,37 +16,42 @@ import { Container, Content, AnimationContainer } from "./styles";
 
 import logoSignIn from "../../assets/logoSignIn.png";
 
-interface SigInFormData {
-  email: string;
+interface RecoveryPasswordFormData {
   password: string;
+  password_confirmation: string;
 }
 
-const SignIn = () => {
+const RecoveryPassword = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const history = useHistory();
-  const { signIn } = useAuth();
+  //const history = useHistory();
   const { addToast } = useToast();
 
   const handleSubmit = useCallback(
-    async (data: SigInFormData) => {
+    async (data: RecoveryPasswordFormData) => {
+      addToast({
+        type: "info",
+        title: "This page is not finished",
+      });
+
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          email: Yup.string()
-            .required("The E-mail field is required")
-            .email("Write a valid email"),
           password: Yup.string().required("The Password field is required"),
+          password_confirmation: Yup.string().oneOf(
+            [Yup.ref("password"), undefined],
+            "Passwords must match"
+          ),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
 
-        await signIn({ email: data.email, password: data.password });
+        //await signIn({ email: data.email, password: data.password });
 
-        history.push("/dashboard");
+        //history.push("/dashboard");
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           const erros = getValidationErrors(err);
@@ -64,7 +68,7 @@ const SignIn = () => {
         });
       }
     },
-    [addToast, history, signIn]
+    [addToast]
   );
 
   return (
@@ -74,24 +78,27 @@ const SignIn = () => {
           <img src={logoSignIn} alt="Whatshapp-Clone" />
 
           <Form ref={formRef} onSubmit={handleSubmit}>
-            <h1>Sign In</h1>
+            <h1>Recovery password</h1>
 
-            <Input name="email" icon={FiMail} type="text" placeholder="Email" />
             <Input
               name="password"
               icon={FiLock}
               type="password"
-              placeholder="Password"
+              placeholder="New password"
+            />
+            <Input
+              name="password_confirmation"
+              icon={FiLock}
+              type="password"
+              placeholder="Password confirmation"
             />
 
-            <Button type="submit">Log In</Button>
-
-            <Link to="/forgot-password">I forgot my password</Link>
+            <Button type="submit">Recover password</Button>
           </Form>
 
-          <Link to="/signup">
-            <FiLogIn />
-            Create account
+          <Link to="/">
+            <FiArrowLeft />
+            Go Back
           </Link>
         </AnimationContainer>
       </Content>
@@ -99,4 +106,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default RecoveryPassword;

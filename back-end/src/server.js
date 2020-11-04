@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import mysql from 'mysql'
+import 'express-async-errors'
 
 import mysqlConnection from '../mysql.js'
 
@@ -8,6 +9,24 @@ import mysqlConnection from '../mysql.js'
 const app = express()
 app.use(express.json());
 app.use(cors())
+
+app.use(
+  (error, request, response, _next) => {
+    if (error instanceof AppError) {
+      return response.status(error.statusCode).json({
+        status: 'error',
+        message: error.message
+      })
+    }
+
+    console.log(error.message) /* eslint-disable-line */
+
+    return response.status(500).json({
+      status: 'error',
+      message: 'Internal server error'
+    })
+  }
+)
 
 const port = process.env.PORT || 3333
 
@@ -51,12 +70,14 @@ app.post('/users/create', (req, res) => {
   })
 })
 
-app.get('/users/find', (req, res) => {
+app.post('/users/sessions', (req, res) => {
   const {email, password} = req.body
 
   con.query(`SELECT * FROM users WHERE email='${email}' AND password='${password}';`, function (err, result) {
     if (result[0]) {
-      return res.status(200).send(result)
+      return res.status(200).send({
+        user: result[0]
+      })
     } else {
       return res.status(404).send()
     }
@@ -87,8 +108,6 @@ app.get('/rooms/:id', (req, res) => {
 })
 
 // app listen
-app.listen(port, () => {
-  console.log(`Server OK, on port ${port}`)
-})
+app.listen(port, () => console.log('🚀 | Server started on port 3333'))
 
 export default app

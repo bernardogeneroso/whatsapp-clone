@@ -1,10 +1,12 @@
-import React, { useCallback, useState, useRef } from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import UseAnimations from "react-useanimations";
 import searchToX from "react-useanimations/lib/searchToX";
 import useDimensions from "react-use-dimensions";
 
 import { IconButton } from "@material-ui/core";
 import { Chat, DonutLarge, MoreVert } from "@material-ui/icons";
+
+import { useAuth } from "../../../hooks/Auth";
 
 import {
   Container,
@@ -13,12 +15,30 @@ import {
   ListChatContainer,
   GroupChatContainer,
 } from "./styles";
+import api from "../../../services/api";
+
+interface RoomsProps {
+  id: number;
+  name: string;
+  chat_description: string;
+  image: string;
+}
 
 const Sidebar = () => {
+  const { user } = useAuth();
+
+  const [rooms, setRooms] = useState<RoomsProps[]>([]);
   const [searchFind, setSearchFind] = useState<boolean>(false);
+
   const inputSearchRef = useRef<HTMLInputElement>(null);
 
   const [ref, { width: widthSidebar }] = useDimensions();
+
+  useEffect(() => {
+    api.get(`/rooms/${user.id}`).then((response) => {
+      setRooms(response.data);
+    });
+  }, [user.id]);
 
   const handleSearchFind = useCallback(() => {
     setSearchFind((state) => !state);
@@ -33,6 +53,7 @@ const Sidebar = () => {
             src="https://material-ui.com//static/images/avatar/3.jpg"
             alt="IMG"
           />
+          <span>{user.name}</span>
         </div>
         <div>
           <IconButton>
@@ -68,105 +89,19 @@ const Sidebar = () => {
       </SearchContainer>
 
       <ListChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
+        {rooms.map((room) => (
+          <GroupChatContainer key={room.id} widthSidebar={widthSidebar}>
+            <img
+              src="https://material-ui.com//static/images/avatar/3.jpg"
+              alt="IMG"
+            />
 
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
-        <GroupChatContainer widthSidebar={widthSidebar}>
-          <img
-            src="https://material-ui.com//static/images/avatar/3.jpg"
-            alt="IMG"
-          />
-
-          <div>
-            <h3>Pixel Camp</h3>
-            <p>Eu podia estar aí, com a minha mota! F900 XR</p>
-          </div>
-        </GroupChatContainer>
+            <div>
+              <h3>{room.name}</h3>
+              <p>{room.chat_description}</p>
+            </div>
+          </GroupChatContainer>
+        ))}
       </ListChatContainer>
     </Container>
   );
