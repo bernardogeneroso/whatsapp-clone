@@ -24,7 +24,16 @@ interface RoomsProps {
   image: string;
 }
 
-const Sidebar = () => {
+interface SideBarProps {
+  handleSelectedRoom: {
+    id: number;
+    name: string;
+    chat_description: string;
+    image: string;
+  };
+}
+
+const Sidebar = ({ handleSelectedRoom }: any) => {
   const { user } = useAuth();
 
   const [rooms, setRooms] = useState<RoomsProps[]>([]);
