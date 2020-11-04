@@ -55,7 +55,7 @@ const Input: React.FC<InputProps> = ({
       isFilled={isFilled}
       style={containerStyle}
     >
-      {Icon && <Icon size={20} />}
+      {Icon && <Icon size={20} color={error && !isFocused ? "#c53030" : ""} />}
       <input
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}

@@ -7,6 +7,9 @@ import { Link, useHistory } from "react-router-dom";
 
 import getValidationErrors from "../../utils/getValidationErrors";
 
+import { useAuth } from "../../hooks/Auth";
+import { useToast } from "../../hooks/Toast";
+
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 
@@ -14,10 +17,57 @@ import { Container, Content, AnimationContainer } from "./styles";
 
 import logoSignIn from "../../assets/logoSignIn.png";
 
+interface SigInFormData {
+  email: string;
+  password: string;
+}
+
 const SignIn = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(() => {}, []);
+  const history = useHistory();
+  const { signIn } = useAuth();
+  const { addToast } = useToast();
+
+  const handleSubmit = useCallback(
+    async (data: SigInFormData) => {
+      try {
+        formRef.current?.setErrors({});
+
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required("The E-mail field is required")
+            .email("Write a valid email"),
+          password: Yup.string().required("The Password field is required"),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        console.log("aqui");
+
+        //await signIn({ email: data.email, password: data.password });
+
+        //history.push("/dashboard");
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const erros = getValidationErrors(err);
+
+          formRef.current?.setErrors(erros);
+
+          return;
+        }
+
+        addToast({
+          type: "error",
+          title: "Authentication error",
+          description: err.response.data.message,
+        });
+      }
+    },
+    [addToast]
+  );
 
   return (
     <Container>
