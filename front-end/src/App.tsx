@@ -1,16 +1,20 @@
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 
-import Dashboard from "./pages/Dashboard";
+import Routes from "./routes";
+import AppProvider from "./hooks";
 
 import GlobalStyle from "./styles/global";
 
 const App = () => {
   return (
-    <>
-      <Dashboard />
+    <Router>
+      <AppProvider>
+        <Routes />
+      </AppProvider>
 
       <GlobalStyle />
-    </>
+    </Router>
   );
 };
 

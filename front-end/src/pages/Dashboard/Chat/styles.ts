@@ -85,7 +85,7 @@ export const Message = styled.p<MessageProps>`
 
   ${props => props.receiver && css`margin-left: auto;`}
 
-  div {
+  h3 {
     position: absolute;
     top: -15px;
     font-weight: 800;
@@ -94,8 +94,9 @@ export const Message = styled.p<MessageProps>`
   }
 
   span {
-    margin-left: 10px;
+    margin-left: auto;
     font-size: xx-small;
+    display: table;
   }
 `
 

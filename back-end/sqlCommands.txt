@@ -1,0 +1,3 @@
+//const sql_createTableRooms = "CREATE TABLE rooms (id INT NOT NULL AUTO_INCREMENT,name VARCHAR(30) NOT NULL,chat_description CHAR(50) NULL,image VARCHAR(255) NULL,PRIMARY KEY(id));"
+//const sql_dropTableRooms = "DROP TABLE rooms;"
+//const sql_insetTableRooms =  "INSERT INTO rooms (name, image) VALUES ('Room1', 'https://material-ui.com//static/images/avatar/3.jpg');";
