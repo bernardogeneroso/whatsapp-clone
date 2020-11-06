@@ -1,16 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
+import ChatReplacement from "./ChatReplacement";
 
 import { Container, TopWrapper } from "./styles";
 
+interface RoomProps {
+  id: number;
+  name: string;
+  chat_description: string;
+  image: string;
+}
+
 const Dashboard = () => {
+  const [selectedRoom, setSelectedRoom] = useState<RoomProps>({} as RoomProps);
+
   return (
     <Container>
       <TopWrapper />
-      <Sidebar />
-      <Chat />
+      <Sidebar setSelectedRoom={setSelectedRoom} />
+      {selectedRoom.id ? (
+        <Chat selectedRoom={selectedRoom} />
+      ) : (
+        <ChatReplacement />
+      )}
     </Container>
   );
 };

@@ -1,5 +1,8 @@
 import React, { createContext, useCallback, useState, useContext } from "react";
+
 import api from "../services/api";
+
+import userDefault from "../assets/userDefault.png";
 
 interface User {
   id: string;
@@ -46,6 +49,10 @@ const AuthProvider: React.FC = ({ children }) => {
     const { user } = response.data;
 
     localStorage.setItem("Whatshapp-clone:user", JSON.stringify(user));
+
+    if (user.image === null) {
+      user.image = userDefault;
+    }
 
     setData({ user });
   }, []);

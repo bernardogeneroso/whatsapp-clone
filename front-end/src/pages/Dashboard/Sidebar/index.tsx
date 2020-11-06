@@ -7,7 +7,6 @@ import { IconButton } from "@material-ui/core";
 import { Chat, DonutLarge, MoreVert } from "@material-ui/icons";
 
 import { useAuth } from "../../../hooks/Auth";
-import { useRooms } from "../../../hooks/Rooms";
 
 import api from "../../../services/api";
 
@@ -21,19 +20,21 @@ import {
 
 import userDefault from "../../../assets/userDefault.png";
 
-interface RoomsProps {
+interface RoomProps {
   id: number;
   name: string;
   chat_description: string;
   image: string;
 }
 
-const Sidebar = () => {
+const Sidebar = ({
+  setSelectedRoom,
+}: {
+  setSelectedRoom: React.Dispatch<React.SetStateAction<RoomProps>>;
+}) => {
   const { user } = useAuth();
 
-  const { setSelectedRoom } = useRooms();
-
-  const [rooms, setRooms] = useState<RoomsProps[]>([]);
+  const [rooms, setRooms] = useState<RoomProps[]>([]);
   const [searchFind, setSearchFind] = useState<boolean>(false);
 
   const inputSearchRef = useRef<HTMLInputElement>(null);
@@ -42,7 +43,15 @@ const Sidebar = () => {
 
   useEffect(() => {
     api.get(`/rooms/${user.id}`).then((response) => {
-      setRooms(response.data);
+      const roomsCheckImage = response.data.filter((room: RoomProps) => {
+        if (room.image === null) {
+          room.image = userDefault;
+        }
+
+        return room;
+      });
+
+      setRooms(roomsCheckImage);
     });
   }, [user.id]);
 
@@ -101,7 +110,7 @@ const Sidebar = () => {
             widthSidebar={widthSidebar}
             onClick={() => setSelectedRoom(room)}
           >
-            <img src={room.image ? room.image : userDefault} alt="IMG" />
+            <img src={room.image} alt="IMG" />
 
             <div>
               <h3>{room.name}</h3>

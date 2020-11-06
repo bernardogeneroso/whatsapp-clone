@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IconButton } from "@material-ui/core";
+//import socketIOClient from "socket.io-client";
 
 import {
   SearchOutlined,
@@ -12,6 +13,7 @@ import {
 } from "@material-ui/icons";
 import { format } from "date-fns";
 
+import { useAuth } from "../../../hooks/Auth";
 import api from "../../../services/api";
 
 import {
@@ -23,50 +25,54 @@ import {
   Message,
   FooterWriteMessage,
 } from "./styles";
-import { useRooms } from "../../../hooks/Rooms";
 
 interface MessageProps {
-  name: string;
+  _id: string;
   message: string;
+  username: string;
   timestamp: string;
+  room_id: number;
 }
 
-const Chat = () => {
-  const { selectedRoom } = useRooms();
+interface RoomProps {
+  id: number;
+  name: string;
+  chat_description: string;
+  image: string;
+}
 
-  const [userName] = useState("");
-  const [messages, setMessages] = useState<MessageProps[]>([]);
+const Chat = ({ selectedRoom }: { selectedRoom: RoomProps }) => {
+  const { user } = useAuth();
+
+  const [messages, setMessages] = useState<MessageProps[]>(
+    [] as MessageProps[]
+  );
   const [inputValue, setInputValue] = useState("");
 
   const containerMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    /*api.get("/messages/sync").then((response) => {
+    api.post(`/messages/receive/${selectedRoom.id}`).then((response) => {
       setMessages(response.data);
     });
 
     const scrollValue = containerMessageRef.current?.scrollHeight;
     if (scrollValue) {
       containerMessageRef.current?.scrollTo(0, scrollValue);
-    }*/
-  }, []);
+    }
+  }, [selectedRoom.id]);
 
-  const handleChangeInputValue = useCallback((event) => {
-    setInputValue(event.target.value);
-  }, []);
+  const handleChangeInputValue = useCallback(
+    (event: { target: HTMLInputElement }) => {
+      setInputValue(event.target.value);
+    },
+    []
+  );
 
-  const handleSendMessage = useCallback(async () => {
-    /*await api.post("/messages/new", {
-      message: inputValue,
-      name: userName,
-      timestamp: new Date(),
-    });
-
-    setInputValue("");*/
-  }, []);
+  const handleSendMessage = useCallback(() => {}, []);
 
   const handleKeyDown = useCallback(
-    async (e) => {
+    (e) => {
       if (inputValue) {
         if (e.key === "Enter") {
           handleSendMessage();
@@ -80,15 +86,13 @@ const Chat = () => {
     <Container>
       <Header>
         <HeaderLeft>
-          <img src={selectedRoom && selectedRoom.image} alt="Avatar" />
+          <img src={selectedRoom.image} alt="Avatar" />
 
           <div>
-            <h3>{selectedRoom && selectedRoom.name}</h3>
+            <h3>{selectedRoom.name}</h3>
 
-            {selectedRoom && selectedRoom.chat_description ? (
+            {selectedRoom.chat_description && (
               <p>Last message: {selectedRoom.chat_description}</p>
-            ) : (
-              ""
             )}
           </div>
         </HeaderLeft>
@@ -108,10 +112,10 @@ const Chat = () => {
       <ContainerMessages ref={containerMessageRef}>
         {messages.map((message) => (
           <Message
-            receiver={message.name === userName && true}
-            key={message.timestamp}
+            receiver={message.username === user.name && true}
+            key={message._id}
           >
-            <h3>{message.name}</h3>
+            <h3>{message.username}</h3>
             <p>{message.message}</p>
             <span>{format(new Date(message.timestamp), "H:mm")}</span>
           </Message>
