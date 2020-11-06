@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IconButton } from "@material-ui/core";
-//import socketIOClient from "socket.io-client";
 
 import {
   SearchOutlined,
@@ -14,6 +13,7 @@ import {
 import { format } from "date-fns";
 
 import { useAuth } from "../../../hooks/Auth";
+import { useRooms } from "../../../hooks/Rooms";
 import api from "../../../services/api";
 
 import {
@@ -42,44 +42,70 @@ interface RoomProps {
 }
 
 const Chat = ({ selectedRoom }: { selectedRoom: RoomProps }) => {
+  const { socket } = useRooms();
   const { user } = useAuth();
 
   const [messages, setMessages] = useState<MessageProps[]>(
     [] as MessageProps[]
   );
-  const [inputValue, setInputValue] = useState("");
+  const [messageInputValue, setMessageInputValue] = useState("");
 
   const containerMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    socket.emit("newRoom", selectedRoom.id);
+
     api.post(`/messages/receive/${selectedRoom.id}`).then((response) => {
       setMessages(response.data);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedRoom.id]);
 
+  useEffect(() => {
     const scrollValue = containerMessageRef.current?.scrollHeight;
     if (scrollValue) {
       containerMessageRef.current?.scrollTo(0, scrollValue);
     }
-  }, [selectedRoom.id]);
+  }, [messages]);
 
-  const handleChangeInputValue = useCallback(
+  useEffect(() => {
+    socket.on("messageRoom", (messageReceived: MessageProps) => {
+      console.log(messageReceived);
+      setMessages((state) => [...state, messageReceived]);
+    });
+  }, [socket, selectedRoom.id]);
+
+  const handleChangeMessageInputValue = useCallback(
     (event: { target: HTMLInputElement }) => {
-      setInputValue(event.target.value);
+      setMessageInputValue(event.target.value);
     },
     []
   );
 
-  const handleSendMessage = useCallback(() => {}, []);
+  const handleSendMessage = useCallback(() => {
+    if (messageInputValue !== "") {
+      const newMessage = {
+        message: messageInputValue,
+        username: user.name,
+        timestamp: new Date(),
+        room_id: selectedRoom.id,
+      };
+
+      socket.emit("newMessage", newMessage);
+
+      setMessageInputValue("");
+    }
+  }, [socket, messageInputValue, user.name, selectedRoom.id]);
 
   const handleKeyDown = useCallback(
     (e) => {
-      if (inputValue) {
+      if (messageInputValue) {
         if (e.key === "Enter") {
           handleSendMessage();
         }
       }
     },
-    [handleSendMessage, inputValue]
+    [handleSendMessage, messageInputValue]
   );
 
   return (
@@ -134,12 +160,12 @@ const Chat = ({ selectedRoom }: { selectedRoom: RoomProps }) => {
         <input
           type="text"
           placeholder="Messagem"
-          onChange={(event) => handleChangeInputValue(event)}
-          value={inputValue}
+          onChange={(event) => handleChangeMessageInputValue(event)}
+          value={messageInputValue}
           onKeyDown={(e) => handleKeyDown(e)}
         />
 
-        {inputValue ? (
+        {messageInputValue ? (
           <IconButton onClick={handleSendMessage}>
             <Send fontSize="inherit" />
           </IconButton>

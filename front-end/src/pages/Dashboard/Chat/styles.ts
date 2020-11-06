@@ -88,10 +88,8 @@ export const Message = styled.p<MessageProps>`
   ${props => props.receiver && css`margin-left: auto;`}
 
   h3 {
-    position: absolute;
-    top: -15px;
-    font-weight: 800;
-    font-size: xx-small;
+    font-weight: 500;
+    font-size: x-small;
     color: rgba(0,0,0,0.6);
   }
 

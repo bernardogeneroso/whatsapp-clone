@@ -42,14 +42,20 @@ messagesRouter.post('/receive/:id', (req, res) => {
 //Sockets
 io.on("connection", (socket) => {
   console.log("New client connected");
-  
+  socket.on('newRoom', (room_id) => {
+    console.log('Room_id: ', room_id)
+    //socket.leave('room1'+room_id-1)
+    socket.join('room'+room_id)
+  })
+
   socket.on('newMessage', (message) => {
     Messages.create(message, (err, data) => {
       if (err) {
         console.log(err)
       } else {
         console.log(data)
-        socket.broadcast.emit('messageRoom', data)
+        socket.emit('messageRoom', data)
+        socket.in('room'+data.room_id).emit('messageRoom', data)
       }
     })
   })
