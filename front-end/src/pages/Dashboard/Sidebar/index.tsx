@@ -7,6 +7,7 @@ import { IconButton } from "@material-ui/core";
 import { Chat, DonutLarge, MoreVert } from "@material-ui/icons";
 
 import { useAuth } from "../../../hooks/Auth";
+import { useRooms } from "../../../hooks/Rooms";
 
 import api from "../../../services/api";
 
@@ -29,10 +30,13 @@ interface RoomProps {
 
 const Sidebar = ({
   setSelectedRoom,
+  selectedRoomID,
 }: {
   setSelectedRoom: React.Dispatch<React.SetStateAction<RoomProps>>;
+  selectedRoomID: number;
 }) => {
   const { user } = useAuth();
+  const { socket } = useRooms();
 
   const [rooms, setRooms] = useState<RoomProps[]>([]);
   const [searchFind, setSearchFind] = useState<boolean>(false);
@@ -59,6 +63,17 @@ const Sidebar = ({
     setSearchFind((state) => !state);
     inputSearchRef.current?.focus();
   }, []);
+
+  const handleChangeRoom = useCallback(
+    (room: RoomProps) => {
+      if (selectedRoomID) {
+        socket.emit("leaveRoom", selectedRoomID);
+      }
+
+      setSelectedRoom(room);
+    },
+    [setSelectedRoom, socket, selectedRoomID]
+  );
 
   return (
     <Container ref={ref}>
@@ -108,7 +123,7 @@ const Sidebar = ({
           <GroupChatContainer
             key={room.id}
             widthSidebar={widthSidebar}
-            onClick={() => setSelectedRoom(room)}
+            onClick={() => handleChangeRoom(room)}
           >
             <img src={room.image} alt="IMG" />
 

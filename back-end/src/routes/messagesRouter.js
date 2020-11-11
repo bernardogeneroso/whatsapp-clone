@@ -42,10 +42,21 @@ messagesRouter.post('/receive/:id', (req, res) => {
 //Sockets
 io.on("connection", (socket) => {
   console.log("New client connected");
+
+  socket.on('leaveRoom', (room_id) => {
+    //console.log('Leave room_id:', room_id)
+    socket.leave('room-'+room_id, () => {
+      let rooms = Object.keys(socket.rooms);
+      console.log(rooms); // [ <socket.id>, 'room 237' ]
+    })
+  })
+
   socket.on('newRoom', (room_id) => {
-    console.log('Room_id: ', room_id)
-    //socket.leave('room1'+room_id-1)
-    socket.join('room'+room_id)
+    //console.log('Room_id:', room_id)
+    socket.join('room-'+room_id, () => {
+      let rooms = Object.keys(socket.rooms);
+      console.log(rooms[1]); // [ <socket.id>, 'room 237' ]
+    })
   })
 
   socket.on('newMessage', (message) => {
@@ -53,9 +64,19 @@ io.on("connection", (socket) => {
       if (err) {
         console.log(err)
       } else {
-        console.log(data)
-        socket.emit('messageRoom', data)
-        socket.in('room'+data.room_id).emit('messageRoom', data)
+        console.log(data, data.room_id)
+        console.log(socket.rooms[0])
+        
+        let rooms = Object.keys(socket.rooms);
+        console.log(rooms[1]);
+
+        io.to(rooms[1]).emit('messageRoom', data)
+        //socket.emit('messageRoom', data)
+        //socket.in('room'+data.room_id.toString()).emit('messageRoom', data)
+        //console.log(data, data.room_id.toString())
+        //socket.to('room-'+data.room_id.toString()).emit('messageRoom', data);
+        //io.in('room-'+data.room_id).emit('messageRoom', data)
+        
       }
     })
   })

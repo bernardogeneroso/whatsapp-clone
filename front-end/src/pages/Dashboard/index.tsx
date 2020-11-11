@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Sidebar from "./Sidebar";
 import Chat from "./Chat";
@@ -19,7 +19,10 @@ const Dashboard = () => {
   return (
     <Container>
       <TopWrapper />
-      <Sidebar setSelectedRoom={setSelectedRoom} />
+      <Sidebar
+        setSelectedRoom={setSelectedRoom}
+        selectedRoomID={selectedRoom.id}
+      />
       {selectedRoom.id ? (
         <Chat selectedRoom={selectedRoom} />
       ) : (
