@@ -10,7 +10,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const Rooms: React.FC = ({ children }) => {
   const [socket] = useState(
     socketIOClient(
-      process.env.REACT_APP_SERVER_IP_SOCKET || "http://localhost:3334"
+      process.env.REACT_APP_SERVER_IP_SOCKET || "http://127.0.0.1:3333"
     )
   );
 

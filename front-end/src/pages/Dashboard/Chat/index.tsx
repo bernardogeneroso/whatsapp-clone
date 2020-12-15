@@ -71,10 +71,9 @@ const Chat = ({ selectedRoom }: { selectedRoom: RoomProps }) => {
 
   useEffect(() => {
     socket.on("messageRoom", (messageReceived: MessageProps) => {
-      console.log(messageReceived);
       setMessages((state) => [...state, messageReceived]);
     });
-  }, [socket, selectedRoom.id]);
+  }, [socket]);
 
   const handleChangeMessageInputValue = useCallback(
     (event: { target: HTMLInputElement }) => {
@@ -92,6 +91,7 @@ const Chat = ({ selectedRoom }: { selectedRoom: RoomProps }) => {
         room_id: selectedRoom.id,
       };
 
+      console.log(newMessage)
       socket.emit("newMessage", newMessage);
 
       setMessageInputValue("");
