@@ -1,19 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
-const http = require("http");
-const socketIO = require("socket.io");
-
-const server = http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end();
-}).listen(3334);
-
-const io = socketIO(server, {
-  cors: {
-    origin: '*',
-  }
-});
 
 const Messages = require('../schemas/messagesSchema.js')
 
@@ -50,37 +37,5 @@ messagesRouter.post('/receive/:id', (req, res) => {
     }
   })
 })
-
-//Sockets
-io.on("connection", (socket) => {
-  console.log("New client connected");
-
-  socket.on('leaveRoom', (room_id) => {
-    console.log('Leave room_id:', room_id)
-    socket.leave("room"+room_id);
-  })
-
-  socket.on('newRoom', (room_id) => {
-    console.log('Room_id:', room_id)
-    socket.join("room"+room_id);
-  })
-
-  socket.on('newMessage', (message) => {
-    Messages.create(message, (err, data) => {
-      if (err) {
-        console.log(err)
-      } else {
-        console.log(data, data.room_id)
-
-        io.to("room"+data.room_id).emit('messageRoom', data);
-      }
-    })
-  })
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected");
-  });
-});
-
 
 module.exports = messagesRouter
